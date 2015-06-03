@@ -1,5 +1,5 @@
 {
-  "name": "gallery-test",
+  "name": "basket-test",
   "version": "1.0.0",
   "description": "Тестовое задание для компании Эмбрия",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jangot/gallery-test.git"
+    "url": "https://github.com/jangot/basket-test.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jangot/gallery-test/issues"
+    "url": "https://github.com/jangot/basket-test/issues"
   },
-  "homepage": "https://github.com/jangot/gallery-test",
+  "homepage": "https://github.com/jangot/basket-test",
   "dependencies": {
     "node-static": "*"
   }
