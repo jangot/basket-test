@@ -13,7 +13,9 @@ define([
 
         this.element.droppable({
             drop: function(e, ui) {
-                $(ui.helper.context).draggable('option','revert', false);
+                $(ui.helper.context)
+                    .draggable('option','revert', false)
+                    .draggable('disable');
                 this.element
                     .find('.thinks-list')
                     .append(ui.helper.context);
