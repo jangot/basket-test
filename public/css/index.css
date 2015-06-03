@@ -4,7 +4,10 @@
 .basket-container .add-to-basket {
     display: none;
 }
-.thumbnail{
+.think {
     -webkit-transition: none;
     transition: none;
+}
+.think.dragging {
+    opacity: 0.5;
 }
