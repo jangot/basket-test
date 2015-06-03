@@ -4,17 +4,59 @@
     <meta charset="UTF-8">
     <title>Галерея</title>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/index.css"/>
     <script src="/bower_components/requirejs/require.js"></script>
 </head>
 <body>
 <script src="/js/require.js"></script>
+
 <script>
-    require(['app', 'bootstrap'], function(app) {
-        var images = [];
+    require(['jquery', 'bootstrap', 'lodash'], function($) {
+        $(function() {
+            require(['app'], function(app) {
+                app.start();
+            });
+        });
 
-
-        app.start();
     });
+
 </script>
+
+<script id="template-basket" type="text/template">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+            Корзина
+        </div>
+        <div class="panel-body thinks-list"></div>
+    </div>
+</script>
+<script id="template-thinks" type="text/template">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-list-alt"></span>
+            Список доступных товаров
+        </div>
+        <div class="panel-body thinks-list"></div>
+    </div>
+</script>
+<script id="template-think" type="text/template">
+    <div class="thumbnail" id="<%= id %>">
+        <div class="caption">
+            <h3><%= title %> | <%= id %></h3>
+            <p><%= description %></p>
+            <button class="btn btn-success add-to-basket">Положить в корзину</button>
+        </div>
+    </div>
+</script>
+
+
+<div class="container bs-docs-container">
+    <div class="app row">
+        <div class="col-sm-7 list-container"></div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-4 basket-container"></div>
+    </div>
+</div>
 </body>
 </html>

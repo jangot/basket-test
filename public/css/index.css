@@ -1,0 +1,10 @@
+.panel-body {
+    min-height: 500px;
+}
+.basket-container .add-to-basket {
+    display: none;
+}
+.thumbnail{
+    -webkit-transition: none;
+    transition: none;
+}
