@@ -3,7 +3,7 @@ define([
     'jquery',
 
     'lib/idGenerator',
-    'lib/touch'
+    'lib/drugndrop'
 
 ], function($, idGenerator) {
 
@@ -30,18 +30,17 @@ define([
                 .append(thinkElement);
         },
         _getThinkElement: function(templateParams) {
-            var touchParams = {
-                start: function() {},
-                end: function() {},
+            var thinkElement = $(thinkTemplate(templateParams));
+
+            var drugndropParams = {
                 drop: function() {
                     this.basket.put(templateParams.id);
                 }.bind(this),
                 container: this.basket.element
             };
 
-            var thinkElement = $(thinkTemplate(templateParams));
             thinkElement
-                .touch(touchParams)
+                .drugndrop(drugndropParams)
                 .find('.add-to-basket')
                 .click(function() {
                     this.basket.put(templateParams.id);

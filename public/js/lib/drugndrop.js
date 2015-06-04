@@ -12,7 +12,7 @@ define([
         container: ''
     }
 
-    $.fn.touch = function(params) {
+    $.fn.drugndrop = function(params) {
         var resultParams = {};
         _.assign(resultParams, defaultParams);
         _.assign(resultParams, params);
@@ -25,15 +25,16 @@ define([
             state.element
                 .on('touchstart', function(e) {
                     e = e.originalEvent;
-                    if (e.touches.length !== 1){
+                    if (state.disabled || e.touches.length !== 1){
                         return;
                     }
                     resultParams.start(e, state.element);
 
                     var offset = state.element.offset();
-
-                    state.x = e.changedTouches[0].pageX;
-                    state.y = e.changedTouches[0].pageY;
+                    var scrollX =  window.scrollX;
+                    var scrollY =  window.scrollY;
+                    state.x = e.changedTouches[0].pageX - scrollX;
+                    state.y = e.changedTouches[0].pageY - scrollY;
                     state.cloneElement = $(this).clone();
 
                     var css = {
@@ -51,49 +52,54 @@ define([
                 })
                 .on('touchmove', function(e) {
                     e = e.originalEvent;
-                    if (!state.cloneElement) {
+                    if (state.disabled || !state.cloneElement) {
                         return;
                     }
 
+                    var scrollX =  window.scrollX;
+                    var scrollY =  window.scrollY;
                     state.currentX = e.changedTouches[0].pageX;
                     state.currentY = e.changedTouches[0].pageY;
 
                     state.cloneElement
                         .css({
-                            left: state.currentX + 'px',
-                            top: state.currentY + 'px'
+                            left: state.currentX - scrollX + 'px',
+                            top: state.currentY - scrollY + 'px'
                         })
                     resultParams.move(e, state.element);
+                    e.preventDefault();
                 })
                 .on('touchend touchcancel', function(e) {
                     e = e.originalEvent;
-                    if (state.cloneElement) {
-                        console.log(e);
-                        if (inContainer(state.currentX, state.currentY)) {
-                            state.element.removeClass('dragging');
-                            state.cloneElement.remove();
-                            state.cloneElement = null;
-                            resultParams.drop(e, state.element);
-                        } else {
-                            state.cloneElement.animate({
-                                left: state.x + 'px',
-                                top: state.y + 'px'
-                            }, {
-                                complete: function() {
-                                    state.cloneElement.remove();
-                                    state.cloneElement = null;
-                                    state.element.removeClass('dragging');
-                                    resultParams.end(e, state.element);
-                                }
-                            });
-                        }
+                    if (state.disabled || !state.cloneElement) {
+                        return;
+                    }
+                    if (inContainer(state.currentX, state.currentY)) {
+                        state.disabled = true;
+                        state.element.removeClass('dragging');
+                        state.cloneElement.remove();
+                        state.cloneElement = null;
+                        resultParams.drop(e, state.element);
+                    } else {
+                        state.cloneElement.animate({
+                            left: state.x + 'px',
+                            top: state.y + 'px'
+                        }, {
+                            complete: function() {
+                                state.cloneElement.remove();
+                                state.cloneElement = null;
+                                state.element.removeClass('dragging');
+                                resultParams.end(e, state.element);
+                            }
+                        });
                     }
                 });
 
             function inContainer(x, y) {
                 var area = getContainerArea();
 
-                return (area.x[0] < x && x < area.x[1] && area.y[0] < y && y < area.y[1]);
+                return (area.x[0] < x && x < area.x[1])
+                    && (area.y[0] < y && y < area.y[1]);
             }
 
             function getContainerArea() {
@@ -102,9 +108,12 @@ define([
                 var width = element.width();
                 var height = element.height();
 
+                var scrollX =  window.scrollX;
+                var scrollY =  window.scrollY;
+
                 return {
-                    x: [offset.left, offset.left + width],
-                    y: [offset.top, offset.top + height]
+                    x: [offset.left - scrollX, offset.left + width - scrollX],
+                    y: [offset.top - scrollY, offset.top + height - scrollY]
                 }
             }
         });
