@@ -3,30 +3,12 @@ define([
     'jquery',
 
     'lib/idGenerator',
-    'jqueryUiTouchPunch'
+    'lib/touch'
 
 ], function($, idGenerator) {
 
     var template = _.template($('#template-thinks').html());
     var thinkTemplate = _.template($('#template-think').html());
-    var draggableParams = {
-        appendTo: 'body',
-        helper: 'clone',
-        addClasses: true,
-        cursor: 'move',
-        revert: true,
-        revertDuration: 100,
-        start: function(e, ui) {
-            var element = $(ui.helper.context);
-            var width = element
-                .addClass('dragging')
-                .width();
-            ui.helper.width(width);
-        },
-        stop: function(e, ui) {
-            $(ui.helper.context).removeClass('dragging');
-        }
-    };
 
     function Things(basket) {
         this.element = $(template());
@@ -48,9 +30,18 @@ define([
                 .append(thinkElement);
         },
         _getThinkElement: function(templateParams) {
+            var touchParams = {
+                start: function() {},
+                end: function() {},
+                drop: function() {
+                    this.basket.put(templateParams.id);
+                }.bind(this),
+                container: this.basket.element
+            };
+
             var thinkElement = $(thinkTemplate(templateParams));
             thinkElement
-                .draggable(draggableParams)
+                .touch(touchParams)
                 .find('.add-to-basket')
                 .click(function() {
                     this.basket.put(templateParams.id);

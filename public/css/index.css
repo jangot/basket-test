@@ -8,6 +8,9 @@
     -webkit-transition: none;
     transition: none;
 }
-.think.dragging {
+.dragging {
     opacity: 0.5;
+}
+.drag {
+    position: absolute;
 }
